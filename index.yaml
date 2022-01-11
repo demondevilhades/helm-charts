@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  test:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-01-11T09:31:20.481214+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 894179c0c7f6efdb3e8be8f08b93e286bbe4ecc27ab1b1d4fd7668e322a4b441
+    name: test
+    type: application
+    urls:
+    - https://demondevilhades.github.io/helm-charts/test-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-01-11T09:31:20.480136+08:00"
