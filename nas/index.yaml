@@ -17,7 +17,7 @@ entries:
     sources:
     - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
     urls:
-    - https://demondevilhades.github.io/helm-charts/nas/nfs/nfs-subdir-external-provisioner-1.0.0.tgz
+    - https://demondevilhades.github.io/helm-charts/nas/nfs/nas-nfs-1.0.0.tgz
     version: 1.0.0
   nas-apps:
   - apiVersion: v2

@@ -1,7 +1,13 @@
-# NFS Subdirectory External Provisioner Helm Chart
+# nas-nfs
 
 Fork from [NFS subdir external provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner) .
 
+## See
+`
+https://github.com/demondevilhades/helm-charts/tree/main/nas/nfs/nas-nfs
+`
+
+## install
 ```
 helm install -n nfs nfs-provisioner ./nfs-subdir-external-provisioner \
     --set fullnameOverride=nfs-01 \
@@ -9,7 +15,7 @@ helm install -n nfs nfs-provisioner ./nfs-subdir-external-provisioner \
     --set serviceAccount.create=false \
     --set nfs.server=awesome-nas \
     --set nfs.path=/data/workspace/docker/data \
-    --set nfs.mountOptions="{nolock}" \
+    --set nfs.mountOptions="{vers=4}" \
     --set nfs.storage=1000Gi \
     --set storageClass.name=sc-nfs-app \
     --set storageClass.provisionerName=nfs-app \
