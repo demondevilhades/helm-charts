@@ -17,8 +17,8 @@ entries:
     sources:
     - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
     urls:
-    - https://demondevilhades.github.io/helm-charts/nas/nfs/nas-nfs-1.0.0.tgz
-    version: 1.0.0
+    - https://demondevilhades.github.io/helm-charts/nas/nfs/nas-nfs.tgz
+    version: 1.0.1
   nas-apps:
   - apiVersion: v2
     appVersion: 0.1.0
@@ -28,6 +28,6 @@ entries:
     name: nas-apps
     type: application
     urls:
-    - https://demondevilhades.github.io/helm-charts/nas/apps/nas-apps-1.0.0.tgz
-    version: 1.0.0
+    - https://demondevilhades.github.io/helm-charts/nas/apps/nas-apps.tgz
+    version: 1.0.1
 generated: "2022-05-22T16:40:15.575727+08:00"
