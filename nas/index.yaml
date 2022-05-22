@@ -19,4 +19,15 @@ entries:
     urls:
     - https://demondevilhades.github.io/helm-charts/nas/nfs/nfs-subdir-external-provisioner-1.0.0.tgz
     version: 1.0.0
+  nas-apps:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-05-22T17:33:19.669086+08:00"
+    description: nas-apps
+    digest: 7f633da98cc882da9dc5c577a570689e821eaec8195000ff6613eacdc301ea97
+    name: nas-apps
+    type: application
+    urls:
+    - https://demondevilhades.github.io/helm-charts/nas/apps/nas-apps-1.0.0.tgz
+    version: 1.0.0
 generated: "2022-05-22T16:40:15.575727+08:00"

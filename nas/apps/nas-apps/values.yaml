@@ -1,0 +1,125 @@
+
+pvc:
+  name: pvc-nfs-app
+
+speedtest:
+  create: true
+  name: 'st'
+  image:
+    registry: 
+    image: adolfintel/speedtest
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  containerPort:
+    http: 80
+  targetPort:
+    http: 61010
+
+
+wetty:
+  create: true
+  name: 'wetty'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: 
+    image: wettyoss/wetty
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  ssh:
+    host: 'awesome-nas'
+    ip: 
+  containerPort:
+    http: 3000
+  targetPort:
+    http: 61020
+
+qb:
+  create: true
+  name: 'qbittorrent'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: 
+    image: linuxserver/qbittorrent
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  env:
+    puid: 1000
+    pgid: 1000
+    tz: 'Asia/Hong_Kong'
+  livenessProbe:
+    initialDelaySeconds: 30
+    timeoutSeconds: 30
+    periodSeconds: 300
+    healthCmd:
+      - 'curl -fs http://localhost:61100/ || exit 1'
+  containerPort:
+    http: 61100
+    listen: 61101
+  targetPort:
+    http: 61100
+    listen: 61101
+  path:
+    data: qbittorrent_data
+    config: qbittorrent_config
+
+proxy:
+  create: true
+  name: 'proxy'
+  terminationGracePeriodSeconds: 30
+  nginx:
+    name: 'proxy-nginx'
+    registry: 
+    image: nginx
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+    containerPort:
+      http: 443
+    targetPort:
+      http: 61110
+    path:
+      conf: nginx/conf.d
+      ssl: nginx/ssl
+  frpc:
+    # name: 'proxy-nginx'
+    # registry: 
+    # image: natfrp/frpc
+    # tag: 'latest'
+    # pullPolicy: IfNotPresent
+    secret: 
+    containers:
+
+tm:
+  create: true
+  name: 'tm'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: 
+    image: ltdstudio/terraforming-mars
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  containerPort:
+    http: 8080
+  targetPort:
+    http: 61200
+  path:
+    db: tm_db
+
+ag:
+  create: false
+  name: 'ag'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: demondevilhades
+    image: awkward_guests
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: registry-docker-io
+  containerPort:
+    http: 80
+  targetPort:
+    http: 61210

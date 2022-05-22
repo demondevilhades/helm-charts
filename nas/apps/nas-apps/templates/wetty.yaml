@@ -1,0 +1,58 @@
+{{ if .Values.wetty.create -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: '{{ .Values.wetty.name }}'
+  name: '{{ .Values.wetty.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Values.wetty.name }}'
+  serviceName: '{{ .Values.wetty.name }}'
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: '{{ .Values.wetty.name }}'
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.wetty.terminationGracePeriodSeconds }}
+      hostAliases:
+      - ip: '{{ .Values.wetty.ssh.ip }}'
+        hostnames: 
+        - '{{ .Values.wetty.ssh.host }}'
+      containers:
+      - name: '{{ .Values.wetty.name }}'
+        {{- with .Values.wetty.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{ .image }}{{ else }}{{ .image }}{{- end -}}:{{ .tag }}{{- if (.digest) -}} @{{.digest}} {{- end -}}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.wetty.image.pullPolicy }}
+        ports:
+          {{- range $key, $value := .Values.wetty.containerPort }}
+          - name: {{ $key }}
+            containerPort: {{ $value }}
+            protocol: TCP
+          {{- end }}
+        args:
+          - --ssh-host='{{ .Values.wetty.ssh.host }}'
+      {{- if .Values.wetty.image.secret }}
+      imagePullSecrets:
+      - name: '{{ .Values.wetty.image.secret }}'
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{ .Values.wetty.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  type: NodePort
+  ports:
+  - port: {{ .Values.wetty.containerPort.http }}
+    protocol: TCP
+    targetPort: {{ .Values.wetty.containerPort.http }}
+    nodePort: {{ .Values.wetty.targetPort.http }}
+  selector:
+    app: '{{ .Values.wetty.name }}'
+{{ end -}}
