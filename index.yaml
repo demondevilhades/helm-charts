@@ -1,0 +1,43 @@
+apiVersion: v1
+entries:
+  nas-nfs:
+  - apiVersion: v1
+    appVersion: 4.0.2
+    description: nfs-subdir-external-provisioner is an automatic provisioner that
+      used your *already configured* NFS server, automatically creating Persistent
+      Volumes.
+    digest: 6d7e67c619963392a4acff29a1a609682b3b030e8d7ac2619cbef088f9718bc1
+    keywords:
+    - nas
+    - nfs
+    - storage
+    - provisioner
+    kubeVersion: '>=1.9.0-0'
+    name: nfs-subdir-external-provisioner
+    sources:
+    - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+    urls:
+    - https://demondevilhades.github.io/helm-charts/nas/nfs/nas-nfs.tgz
+    version: 1.0.1
+  nas-apps:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    description: nas-apps
+    digest: 7f633da98cc882da9dc5c577a570689e821eaec8195000ff6613eacdc301ea97
+    keywords:
+    - nas
+    - app
+    name: nas-apps
+    type: application
+    urls:
+    - https://demondevilhades.github.io/helm-charts/nas/apps/nas-apps.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.16.0
+    description: A Helm chart for Kubernetes
+    digest: 894179c0c7f6efdb3e8be8f08b93e286bbe4ecc27ab1b1d4fd7668e322a4b441
+    name: test
+    type: application
+    urls:
+    - https://demondevilhades.github.io/helm-charts/test/test.tgz
+    version: 0.1.1
