@@ -41,7 +41,8 @@ qb:
   terminationGracePeriodSeconds: 30
   image:
     registry: 
-    image: linuxserver/qbittorrent
+    # image: linuxserver/qbittorrent
+    image: andrewsav/qbittorrent
     tag: 'latest'
     pullPolicy: IfNotPresent
     secret: 
