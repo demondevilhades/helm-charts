@@ -31,7 +31,7 @@ entries:
     type: application
     urls:
     - https://demondevilhades.github.io/helm-charts/nas/apps/nas-apps.tgz
-    version: 1.0.1
+    version: 2.0.0
   test:
   - apiVersion: v2
     appVersion: 1.16.0
