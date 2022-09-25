@@ -16,7 +16,6 @@ speedtest:
   targetPort:
     http: 61010
 
-
 wetty:
   create: true
   name: 'wetty'
@@ -41,8 +40,7 @@ qb:
   terminationGracePeriodSeconds: 30
   image:
     registry: 
-    # image: linuxserver/qbittorrent
-    image: andrewsav/qbittorrent
+    image: linuxserver/qbittorrent
     tag: 'latest'
     pullPolicy: IfNotPresent
     secret: 
@@ -66,6 +64,51 @@ qb:
     data: qbittorrent_data
     config: qbittorrent_config
 
+jackett:
+  create: true
+  name: 'jackett'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: 
+    image: linuxserver/jackett
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  env:
+    puid: 1000
+    pgid: 1000
+    tz: 'Asia/Hong_Kong'
+  containerPort:
+    http: 9117
+  targetPort:
+    http: 61120
+  path:
+    downloads: jackett/downloads
+    config: jackett/config
+
+nastools:
+  create: true
+  name: 'nastools'
+  terminationGracePeriodSeconds: 30
+  image:
+    registry: 
+    image: jxxghp/nas-tools
+    tag: 'latest'
+    pullPolicy: IfNotPresent
+    secret: 
+  env:
+    puid: 0
+    pgid: 0
+    umask: 000
+    tz: 'Asia/Hong_Kong'
+    autoupdate: false
+  containerPort:
+    http: 3000
+  targetPort:
+    http: 61130
+  path:
+    config: nas-tools/config
+
 proxy:
   create: true
   name: 'proxy'
@@ -84,6 +127,7 @@ proxy:
     path:
       conf: nginx/conf.d
       ssl: nginx/ssl
+      root: nginx/root
   frpc:
     # name: 'proxy-nginx'
     # registry: 

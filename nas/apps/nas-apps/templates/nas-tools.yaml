@@ -1,0 +1,73 @@
+{{ if .Values.nastools.create -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: '{{ .Values.nastools.name }}'
+  name: '{{ .Values.nastools.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Values.nastools.name }}'
+  serviceName: '{{ .Values.nastools.name }}'
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: '{{ .Values.nastools.name }}'
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.nastools.terminationGracePeriodSeconds }}
+      containers:
+      - name: '{{ .Values.nastools.name }}'
+        {{- with .Values.nastools.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{ .image }}{{ else }}{{ .image }}{{- end -}}:{{ .tag }}{{- if (.digest) -}} @{{.digest}} {{- end -}}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.nastools.image.pullPolicy }}
+        env:
+        - name: PUID
+          value: '{{ .Values.nastools.env.puid }}'
+        - name: PGID
+          value: '{{ .Values.nastools.env.pgid }}'
+        - name: UMASK
+          value: '{{ .Values.nastools.env.umask }}'
+        - name: TZ
+          value: '{{ .Values.nastools.env.tz }}'
+        - name: NASTOOL_AUTO_UPDATE
+          value: '{{ .Values.nastools.env.autoupdate }}'
+        ports:
+          - name: 'http'
+            containerPort: {{ .Values.nastools.containerPort.http }}
+            protocol: TCP
+        volumeMounts:
+        - mountPath: /downloads
+          name: '{{ .Values.pvc.name }}'
+          subPath: '{{ .Values.qb.path.data }}'
+        - mountPath: /config
+          name: '{{ .Values.pvc.name }}'
+          subPath: '{{ .Values.nastools.path.config }}'
+      volumes:
+      - name: '{{ .Values.pvc.name }}'
+        persistentVolumeClaim:
+          claimName: '{{ .Values.pvc.name }}'
+      {{- if .Values.nastools.image.secret }}
+      imagePullSecrets:
+      - name: '{{ .Values.nastools.image.secret }}'
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{ .Values.nastools.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  type: NodePort
+  ports:
+  - name: 'http'
+    port: {{ .Values.nastools.containerPort.http }}
+    protocol: TCP
+    targetPort: {{ .Values.nastools.containerPort.http }}
+    nodePort: {{ .Values.nastools.targetPort.http }}
+  selector:
+    app: '{{ .Values.nastools.name }}'
+{{ end -}}

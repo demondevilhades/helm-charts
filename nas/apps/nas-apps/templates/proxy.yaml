@@ -37,6 +37,10 @@ spec:
           name: '{{ .Values.pvc.name }}'
           subPath: '{{ .Values.proxy.nginx.path.ssl }}'
           readOnly: true
+        - mountPath: /usr/share/nginx/root
+          name: '{{ .Values.pvc.name }}'
+          subPath: '{{ .Values.proxy.nginx.path.root }}'
+          readOnly: true
       {{- range .Values.proxy.frpc.containers }}
         {{- with . }}
       - name: {{ .name }}

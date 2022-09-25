@@ -2,15 +2,6 @@
 
 My app chart on qnap k3s.
 
-![nas-k3s](https://github.com/demondevilhades/helm-charts/blob/main/static/nas-k3s.png?raw=true)
-
-## See
-`
-https://github.com/demondevilhades/helm-charts/tree/main/nas/apps/nas-apps
-`
-
-## app & ports
-
 | Type  | App  | NodePort  |
 |:--------|:------|:----------|
 | Ops    | speedtest    | 61010    |
@@ -18,6 +9,8 @@ https://github.com/demondevilhades/helm-charts/tree/main/nas/apps/nas-apps
 | Def    | dashboard    | 61060    |
 | Tool    | qbittorrent    | 61100    |
 | Tool    | proxy    | 61110    |
+| Tool    | jackett    | 61120    |
+| Tool    | nas-tools    | 61130    |
 | Game    | tm    | 61200    |
 | Game    | ag    | 61210    |
 
@@ -32,10 +25,18 @@ https://github.com/demondevilhades/helm-charts/tree/main/nas/apps/nas-apps
 ## Tool
 
 ### linuxserver/qbittorrent
-
+Set `Downloads\PreAllocation=false`.
+Due to the nfs lock.
 
 ### proxy
 
+### jackett
+manual config
+
+### nas-tools
+manual config
+jackett_url: http://jackett:9117
+qbittorrent_url: qbittorrent-http:61100
 
 ## Game
 
@@ -49,9 +50,9 @@ https://github.com/demondevilhades/helm-charts/tree/main/nas/apps/nas-apps
 
 ### volume dependency
 ```
-kubernetes create ns app
+kubectl create ns app
 
-helm install -n app nfs-app ./nas-nfs \
+helm install -n app nas-nfs ./nas-nfs \
     --set fullnameOverride=nfs-app \
     --set image.repository=demondevilhades/k8s.gcr.io_sig-storage_nfs-subdir-external-provisioner \
     --set serviceAccount.create=false \
@@ -64,15 +65,18 @@ helm install -n app nfs-app ./nas-nfs \
     --set storageClass.reclaimPolicy=Retain \
     --set storageClass.accessModes=ReadWriteMany
 
-helm uninstall -n app nfs-app
+helm uninstall -n app nas-nfs
 ```
 
 ### start/update/stop
 ```
 
 helm upgrade --install -n app nas-apps ./nas-apps \
---set wetty.ssh.ip={host.ip} \
---set ag.create=true
+# --set ag.create=true \
+--set wetty.ssh.ip={host.ip}
 
 helm uninstall -n app nas-apps
 ```
+
+
+

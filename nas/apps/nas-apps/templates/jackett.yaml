@@ -1,0 +1,69 @@
+{{ if .Values.jackett.create -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: '{{ .Values.jackett.name }}'
+  name: '{{ .Values.jackett.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Values.jackett.name }}'
+  serviceName: '{{ .Values.jackett.name }}'
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: '{{ .Values.jackett.name }}'
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.jackett.terminationGracePeriodSeconds }}
+      containers:
+      - name: '{{ .Values.jackett.name }}'
+        {{- with .Values.jackett.image }}
+        image: "{{- if .registry -}}{{ .registry }}/{{ .image }}{{ else }}{{ .image }}{{- end -}}:{{ .tag }}{{- if (.digest) -}} @{{.digest}} {{- end -}}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.jackett.image.pullPolicy }}
+        env:
+        - name: PUID
+          value: '{{ .Values.jackett.env.puid }}'
+        - name: PGID
+          value: '{{ .Values.jackett.env.pgid }}'
+        - name: TZ
+          value: '{{ .Values.jackett.env.tz }}'
+        ports:
+          - name: 'http'
+            containerPort: {{ .Values.jackett.containerPort.http }}
+            protocol: TCP
+        volumeMounts:
+        - mountPath: /downloads
+          name: '{{ .Values.pvc.name }}'
+          subPath: '{{ .Values.jackett.path.downloads }}'
+        - mountPath: /config
+          name: '{{ .Values.pvc.name }}'
+          subPath: '{{ .Values.jackett.path.config }}'
+      volumes:
+      - name: '{{ .Values.pvc.name }}'
+        persistentVolumeClaim:
+          claimName: '{{ .Values.pvc.name }}'
+      {{- if .Values.jackett.image.secret }}
+      imagePullSecrets:
+      - name: '{{ .Values.jackett.image.secret }}'
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: '{{ .Values.jackett.name }}'
+  namespace: '{{ .Release.Namespace }}'
+spec:
+  type: NodePort
+  ports:
+  - name: 'http'
+    port: {{ .Values.jackett.containerPort.http }}
+    protocol: TCP
+    targetPort: {{ .Values.jackett.containerPort.http }}
+    nodePort: {{ .Values.jackett.targetPort.http }}
+  selector:
+    app: '{{ .Values.jackett.name }}'
+{{ end -}}
